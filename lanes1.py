@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 # import matplotlib.pyplot as plt
 import os
-import vehicle_detector as vd
+from vehicle_detector import vehicle_detector as vd
 
 
 # Function that takes in an image. It then converts it to grayscale
@@ -71,7 +71,7 @@ def get_coordinates(img, line_parameters):
     # print(image.shape)
 
     y1 = img.shape[0]
-    y2 = int(y1 * (3/5))
+    y2 = int(y1 * (3.25/5))
 
     # Since, y = mx + b
     x1 = int((y1 - b) / m)
