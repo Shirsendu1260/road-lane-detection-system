@@ -137,12 +137,10 @@ def detect_lanes(frame):
     image_roi = region_of_interest(image_canny)
 
     # Detect lines in cropped gradient image and display that lane lines in the original image
-    rho = 1  # Precision of 1 pixels
-    # Precision of 1 degree i.e. 1 degree = pi/180 radians
+    rho = 1
     theta = 1 * (np.pi/180)
-    # Threshold = 40
-    lines = cv2.HoughLinesP(image_roi, rho, theta, 40, np.array(
-        []), minLineLength=30, maxLineGap=200)
+    lines = cv2.HoughLinesP(image_roi, rho, theta, 30, np.array(
+        []), minLineLength=90, maxLineGap=200)
 
     # Average multiple lines into a single line for each side of road lane
     # Ultimately there will be only 2 lines for 2 lane lines

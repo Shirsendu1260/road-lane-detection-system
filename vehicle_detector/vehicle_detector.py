@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 
 # img = cv2.imread(r"test_images\test1.jpg")
@@ -11,6 +12,10 @@ with open(r"vehicle_detector\coco.names", "rt") as file:
 
 # List that contains indices of the desired classes - 'bicycle', 'car', 'motorcycle', 'bus'
 desired_classes = [2, 3, 4, 6]
+
+# Create random colors for each class
+np.random.seed(42)
+colors = np.random.uniform(150, 255, size=(len(class_names), 3))
 
 config_path = r"vehicle_detector\ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt"
 weights_path = r"vehicle_detector\frozen_inference_graph.pb"
@@ -39,9 +44,10 @@ def vehicle_detector(img):
         # Check if the detected class belongs to the desired classes
         if class_id in desired_classes:
             x, y, w, h = bbox
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            color = colors[class_id]
+            cv2.rectangle(img, (x, y), (x+w, y+h), color, 2)
             cv2.putText(img, f'{class_names[class_id-1].upper()} {int(confidence*100)}%',
-                        (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 255, 0), 2)
+                        (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 
     return img
 
