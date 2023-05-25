@@ -1,4 +1,3 @@
-# Import packages
 import sys
 import cv2
 import numpy as np
@@ -11,6 +10,12 @@ from vehicle_detector import vehicle_detector as vd
 # Then converts that grayscale image to blurred image to remove noise
 # Finally edges are detected using Canny Edge detector on that blurred image
 def edge_detector(img, low_threshold, high_threshold):
+    if img is None:
+        # Release the resources
+        capture.release()
+        output.release()
+        cv2.destroyAllWindows()
+
     # Grayscale conversion
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -87,6 +92,9 @@ def average_lane_lines(img, lines):
     left_fit = []
     # Will contain slope and y-intersect value of the lines on the right
     right_fit = []
+
+    if lines is None:
+        return None
 
     for line in lines:
         x1, y1, x2, y2 = line.reshape(4)
@@ -204,7 +212,7 @@ def detect_lanes(frame):
 if __name__ == "__main__":
     # Get the input video filename as command line argument
     if len(sys.argv) != 2:
-        print("Usage: python lanes1.py input.mp4")
+        print("Usage: python algo1.py input.mp4")
         sys.exit(1)
 
     # Obtain the input path
