@@ -15,7 +15,7 @@ desired_classes = [2, 3, 4, 6]
 
 # Create random colors for each class
 np.random.seed(42)
-colors = np.random.uniform(150, 255, size=(len(class_names), 3))
+colors = np.random.uniform(185, 255, size=(len(class_names), 3))
 
 config_path = r"vehicle_detector\ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt"
 weights_path = r"vehicle_detector\frozen_inference_graph.pb"

@@ -3,30 +3,10 @@ import cv2
 import numpy as np
 # import matplotlib.pyplot as plt
 import os
+from utilities.edge_detector import edge_detector
+from utilities.display_lines import display_lines
+from utilities.get_lane_lines import average_lane_lines
 from vehicle_detector import vehicle_detector as vd
-
-
-# Function that takes in an image. It then converts it to grayscale
-# Then converts that grayscale image to blurred image to remove noise
-# Finally edges are detected using Canny Edge detector on that blurred image
-def edge_detector(img, low_threshold, high_threshold):
-    if img is None:
-        # Release the resources
-        capture.release()
-        output.release()
-        cv2.destroyAllWindows()
-
-    # Grayscale conversion
-    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # Apply Gaussian blur
-    kernel = 5
-    img_blur = cv2.GaussianBlur(img_gray, (kernel, kernel), 0)
-
-    # Edge detection using Canny Edge detector
-    img_canny = cv2.Canny(img_blur, low_threshold, high_threshold)
-
-    return img_canny
 
 
 # Function that masks every portion of the image except the portion where the lane is visible
@@ -52,123 +32,15 @@ def region_of_interest(img):
     return masked_img
 
 
-# Function to display lane lines in original image
-def display_lines(img, lines):
-    # Create a mask image of all black pixels of same dimension as the road image
-    line_image = np.zeros_like(img)
-
-    # 'lines' is 3-D array
-    # Check if it had detected any lines
-    if lines is not None:
-        # Take each line we are iterating through and draw it onto the blank image
-        for x1, y1, x2, y2 in lines:
-            # print(line)
-            cv2.line(line_image, (x1, y1), (x2, y2), (0, 255, 255), 7)
-
-    return line_image
-
-
-# Function to return coordinates of a straight line
-def get_coordinates(img, line_parameters):
-    m = line_parameters[0]  # Slope
-    b = line_parameters[1]  # y-intersect value
-
-    # print(image.shape)
-
-    y1 = img.shape[0]
-    y2 = int(y1 * (3.25/5))
-
-    # Since, y = mx + b
-    x1 = int((y1 - b) / m)
-    x2 = int((y2 - b) / m)
-
-    # Return the derived coordinates
-    return np.array([x1, y1, x2, y2])
-
-
-# Function to average multiple lines into a single line for each side of road lane
-def average_lane_lines(img, lines):
-    # Will contain slope and y-intersect value of the lines on the left
-    left_fit = []
-    # Will contain slope and y-intersect value of the lines on the right
-    right_fit = []
-
-    if lines is None:
-        return None
-
-    for line in lines:
-        x1, y1, x2, y2 = line.reshape(4)
-        # polyfit() will fit a 1st degree polynomial (which y = mx + b) to x and y points
-        # And return a vector of coefficients
-        # Which describes the slope (m) and y intersect value (b) for the line
-        # Returns an array for each line (which is [slope, y-intersect value])
-        parameters = np.polyfit((x1, x2), (y1, y2), 1)
-        # print(parameters)
-
-        slope = parameters[0]
-        y_intersect = parameters[1]
-
-        # Check slope of that line which corresponds to a line on left side or right side
-        # Lines on the left and the right have a negative and a positive slope respectively
-        if slope < 0:
-            left_fit.append((slope, y_intersect))
-        else:
-            right_fit.append((slope, y_intersect))
-
-    # print(left_fit)
-    # print(right_fit)
-
-    left_fit_avg = np.average(left_fit, axis=0)
-    right_fit_avg = np.average(right_fit, axis=0)
-
-    # print("Left Fit Average:", left_fit_avg)
-    # print("Right Fit Average:", right_fit_avg)
-
-    # Constructing the left and the right line
-    left_line = get_coordinates(img, left_fit_avg)
-    right_line = get_coordinates(img, right_fit_avg)
-
-    # Return the lines
-    return np.array([left_line, right_line])
-
-
-# The main algorithm code
-def detect_lanes(frame):
-    # Edge detection
-    image_canny = edge_detector(frame, 50, 150)
-
-    # # Display the image
+# # Display the image
     # plt.imshow(image_canny)
     # plt.show()
-
-    # Define region of interest
-    image_roi = region_of_interest(image_canny)
-
-    # Detect lines in cropped gradient image and display that lane lines in the original image
-    rho = 1
-    theta = 1 * (np.pi/180)
-    lines = cv2.HoughLinesP(image_roi, rho, theta, 30, np.array(
-        []), minLineLength=90, maxLineGap=200)
-
-    # Average multiple lines into a single line for each side of road lane
-    # Ultimately there will be only 2 lines for 2 lane lines
-    avg_lines = average_lane_lines(frame, lines)
-    image_lines = display_lines(frame, avg_lines)
-    # image_lines = display_lines(image_copy, lines)
-
-    # Blend 'image_lines' with the original image
-    alpha = 0.8
-    beta = 1
-    gamma = 0
-    image_blend = cv2.addWeighted(frame, alpha, image_lines, beta, gamma)
-
-    return image_blend
 
 
 # # Test code
 # if __name__ == "__main__":
 #     # Read a footage
-#     image = cv2.imread('test_files\\test_images\\test8.jpg')
+#     image = cv2.imread(r'test_images\test8.jpg')
 
 #     # Copy of original footage
 #     image_copy = np.copy(image)
@@ -225,11 +97,11 @@ if __name__ == "__main__":
     out_filename = in_filename + "_out.mp4"
 
     # set output folder path
-    output_path = os.path.join("rld_pht_out", out_filename)
+    output_path = os.path.join("algo1_out", out_filename)
 
     # Define desired width and height for resizing
-    w = 600
-    h = 338
+    w = 500
+    h = 282
 
     # Read a video footage with the desired width and height
     capture = cv2.VideoCapture(input_path)
@@ -245,9 +117,9 @@ if __name__ == "__main__":
 
     # Set the window resolution explicitly
     cv2.namedWindow(
-        "Road Lane Detection using Probabilistic Hough Transform", cv2.WINDOW_NORMAL)
+        "Road Lane Detection (Without Distortion Correction & Bird's-eye View)", cv2.WINDOW_NORMAL)
     cv2.resizeWindow(
-        "Road Lane Detection using Probabilistic Hough Transform", w*2, h)
+        "Road Lane Detection (Without Distortion Correction & Bird's-eye View)", w*2, h*2)
 
     while True:
         # Read each frame in the video
@@ -255,10 +127,37 @@ if __name__ == "__main__":
 
         if not success:
             # If unable to read the frame
+            print("END!")
             break
 
-        # Apply the main algorithm to the input video frame
-        output_frame = detect_lanes(input_frame)
+        ##### MAIN ALGORITHM STARTS #####
+
+        # Edge detection
+        image_canny = edge_detector(input_frame, 50, 150)
+
+        # Define region of interest
+        image_roi = region_of_interest(image_canny)
+
+        # Detect lines in cropped gradient image and display that lane lines in the original image
+        rho = 1
+        theta = 1 * (np.pi/180)
+        lines = cv2.HoughLinesP(image_roi, rho, theta, 30, np.array(
+            []), minLineLength=90, maxLineGap=200)
+
+        # Average multiple lines into a single line for each side of road lane
+        # Ultimately there will be only 2 lines for 2 lane lines
+        avg_lines = average_lane_lines(input_frame, lines)
+        image_lines = display_lines(input_frame, avg_lines, 7)
+        # image_lines = display_lines(image_copy, lines)
+
+        # Blend 'image_lines' with the original image
+        alpha = 0.8
+        beta = 1
+        gamma = 0
+        output_frame = cv2.addWeighted(
+            input_frame, alpha, image_lines, beta, gamma)
+
+        ##### MAIN ALGORITHM ENDS #####
 
         # Apply Vehicle Detection
         output_frame = vd.vehicle_detector(output_frame)
@@ -267,15 +166,23 @@ if __name__ == "__main__":
         output.write(output_frame)
 
         # Add labels to the frames
-        cv2.putText(input_frame, "Before", (11, 40),
+        cv2.putText(input_frame, "Input Frame", (11, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-        cv2.putText(output_frame, "After", (11, 40),
+        cv2.putText(image_canny, "Edge Detected Frame", (11, 40),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        cv2.putText(image_lines, "Cropped Gradient Frame with detected lanes", (11, 40),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        cv2.putText(output_frame, "Final Output", (11, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
-        # Display the input and the output frame side by side
-        final_frame = cv2.hconcat([input_frame, output_frame])
+        # Display the frames
+        concate_frame_1 = cv2.hconcat(
+            [input_frame, cv2.cvtColor(image_canny, cv2.COLOR_GRAY2BGR)])
+        concate_frame_2 = cv2.hconcat(
+            [image_lines, output_frame])
+        final_frame = cv2.vconcat([concate_frame_1, concate_frame_2])
         cv2.imshow(
-            "Road Lane Detection using Probabilistic Hough Transform", final_frame)
+            "Road Lane Detection (Without Distortion Correction & Bird's-eye View)", final_frame)
 
         # Exit the loop when 'q' key is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
