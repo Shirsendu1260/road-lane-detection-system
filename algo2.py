@@ -8,10 +8,10 @@ from vehicle_detector import vehicle_detector as vd
 
 
 # The points from the region where the lane is visible
-source_points = np.float32([(412, 345), (112, 540), (900, 540), (570, 345)])
+source_points = np.float32([(387, 370), (112, 540), (900, 540), (540, 370)])
 
 # The points to display the source region from top-view
-destination_points = np.float32([(75, 0), (75, 540), (825, 540), (825, 0)])
+destination_points = np.float32([(75, 0), (75, 540), (825, 540), (680, 0)])
 
 # Create perspective region of top-view where lane lines look parallel
 top_view = cv2.getPerspectiveTransform(source_points, destination_points)
