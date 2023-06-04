@@ -103,7 +103,7 @@ if __name__ == "__main__":
         beta = 1
         gamma = 0
         output_frame = cv2.addWeighted(
-            input_frame, alpha, image_final, beta, gamma)
+            image_undist, alpha, image_final, beta, gamma)
 
         ##### MAIN ALGORITHM ENDS #####
 
