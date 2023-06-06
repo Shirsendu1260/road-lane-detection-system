@@ -63,4 +63,4 @@ Where `algo2.py` is a Python file containing the project's algorithm and `input.
 
 
 ---
-Dataset credit: Duong Pham, Eddie Forson
+<strong>Dataset credit:</strong> Duong Pham, Eddie Forson
