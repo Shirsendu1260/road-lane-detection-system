@@ -60,3 +60,7 @@ Where `algo2.py` is a Python file containing the project's algorithm and `input.
 
 ### Final result:
 ![2](https://github.com/Shirsendu1260/road-lane-detection-system/assets/102348951/c8634f25-57ad-4c09-9518-ed80fe86370d)
+
+
+---
+Dataset credit: Duong Pham, Eddie Forson
