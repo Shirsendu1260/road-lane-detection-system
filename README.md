@@ -3,6 +3,7 @@
 The repository includes two image processing pipelines for lane and vehicle detection from dashcam footage using Python and OpenCV. Here, you'll find not one, but two distinct pipelines, each with its own set of features. The first algorithm use a naive approach using Canny Edge Detection and Hough Transform to identify lanes. However, it is unable to eliminate distortion that are caused by camera lenses. Additionally, in this case, the drawn lane lines have a tendency to converge at a specific point in the video frame, which is terrible in a real-world scenario. The second algorithm is therefore suggested for that purpose. The drawn lane lines no longer tend to converge at some point thanks to this algorithm, which also eliminates the camera distortion problem. To find lanes, it use a Sliding Window approach. To detect various cars, both algorithms employ the SSD MobileNet v3 architecture.
 
 
+---
 Project 1: Lane Detection using Canny Edge Detection and Probabilistic Hough Transform
 ---
 
@@ -33,6 +34,7 @@ Where `algo1.py` is a Python file containing the project's algorithm and `input.
 ![1](https://github.com/Shirsendu1260/road-lane-detection-system/assets/102348951/924f6507-5f33-46f2-a3f7-7a76095cccba)
 
 
+---
 Project 2: Lane Detection using Camera Calibration matrix and Sliding Window approach
 ---
 
@@ -57,4 +59,4 @@ Project 2: Lane Detection using Camera Calibration matrix and Sliding Window app
 Where `algo2.py` is a Python file containing the project's algorithm and `input.mp4` is an MP4 video on which to test the algorithm. These test videos are placed in the `test_videos` folder.
 
 ### Final result:
-![2](https://github.com/Shirsendu1260/road-lane-detection-system/assets/102348951/cd77fefd-8c74-404c-9a1c-0d5216a9d2f7)
+![2](https://github.com/Shirsendu1260/road-lane-detection-system/assets/102348951/c8634f25-57ad-4c09-9518-ed80fe86370d)
