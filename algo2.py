@@ -118,7 +118,7 @@ if __name__ == "__main__":
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
         cv2.putText(image_bev, "Bird's-eye View Frame", (11, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-        cv2.putText(image_final, "Bird's-eye View Frame with detected lanes", (11, 40),
+        cv2.putText(image_final, "Thresholded Binary Frame with detected lanes", (11, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
         cv2.putText(output_frame, "Final Output", (11, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
