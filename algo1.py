@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 # import matplotlib.pyplot as plt
 import os
+# import time
 from utilities.edge_detector import edge_detector
 from utilities.display_lines import display_lines
 from utilities.get_lane_lines import average_lane_lines
@@ -130,6 +131,8 @@ if __name__ == "__main__":
             print("END!")
             break
 
+        # start = time.time()
+
         ##### MAIN ALGORITHM STARTS #####
 
         # Edge detection
@@ -158,6 +161,10 @@ if __name__ == "__main__":
             input_frame, alpha, image_lines, beta, gamma)
 
         ##### MAIN ALGORITHM ENDS #####
+
+        # total_time = time.time() - start
+
+        # print("{:.2f}".format(total_time * 1000))
 
         # Apply Vehicle Detection
         output_frame = vd.vehicle_detector(output_frame)

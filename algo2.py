@@ -2,6 +2,7 @@ import sys
 import cv2
 import numpy as np
 import os
+# import time
 from utilities import camera_calibrator as cc
 from utilities.sliding_window import thresh_binary, sliding_window
 from vehicle_detector import vehicle_detector as vd
@@ -80,6 +81,8 @@ if __name__ == "__main__":
             print("END!")
             break
 
+        # start = time.time()
+
         ##### MAIN ALGORITHM STARTS #####
 
         # Get undistorted image
@@ -106,6 +109,10 @@ if __name__ == "__main__":
             image_undist, alpha, image_final, beta, gamma)
 
         ##### MAIN ALGORITHM ENDS #####
+
+        # total_time = time.time() - start
+
+        # print("{:.2f}".format(total_time * 1000))
 
         # Apply Vehicle Detection
         output_frame = vd.vehicle_detector(output_frame)
